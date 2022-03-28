@@ -9,11 +9,11 @@ part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final _repo = AuthRepo();
-  final LoginCubit _loginCubit;
-  late StreamSubscription? _loginSubscription;
+  final LoginCubit loginCubit;
+  StreamSubscription? _loginSubscription;
 
-  AuthCubit(this._loginCubit) : super(AuthInitial()){
-    _loginSubscription = _loginCubit.stream.listen((LoginState state) {
+  AuthCubit(this.loginCubit) : super(AuthInitial()){
+    _loginSubscription = loginCubit.stream.listen((LoginState state) {
       if (state is LoginSuccess) {
         print('LOGGED IN TOKEN ==> ${state.token}');
         loggedIn(token: state.token);
@@ -44,5 +44,11 @@ class AuthCubit extends Cubit<AuthState> {
       print(e);
       emit(AuthUnAuthenticated());
     }
+  }
+
+  @override
+  Future<void> close() {
+    _loginSubscription?.cancel();
+    return super.close();
   }
 }

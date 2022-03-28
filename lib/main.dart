@@ -9,18 +9,17 @@ import 'package:my_circle/utils/routes.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_)=>RegisterCubit()),
         BlocProvider(create: (_)=>LoginCubit()),
-        BlocProvider(create: (_)=>AuthCubit(LoginCubit())),
+        BlocProvider(create: (context)=>AuthCubit(context.read<LoginCubit>())),
       ],
       child: MaterialApp(
         title: 'My Circle',

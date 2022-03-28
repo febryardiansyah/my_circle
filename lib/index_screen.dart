@@ -14,6 +14,7 @@ class _IndexScreenState extends State<IndexScreen> {
   @override
   void initState() {
     super.initState();
+    //init auth
     context.read<AuthCubit>().appStarted();
   }
 

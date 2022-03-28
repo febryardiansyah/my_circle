@@ -7,15 +7,19 @@ import 'package:my_circle/utils/base_string.dart';
 
 
 class AuthRepo {
+  //initialize variable
   final _auth = FirebaseAuth.instance;
   final _fireStore = FirebaseFirestore.instance;
   final _storage = FlutterSecureStorage();
 
   Future<ResponseModel> register({required String name, required String email, required String password})async{
     try{
+      //create user with email & password
       UserCredential _user = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       print(_user.user.toString());
+      // store data to model
       final _userData = UserModel(name: name, email: email,);
+      // store model to firestore
       await _fireStore.collection('users').doc(_user.user?.uid).set(_userData.toMap());
       return ResponseModel(
         status: true,
@@ -70,5 +74,9 @@ class AuthRepo {
   Future<bool> hasToken()async{
     String? token = await getToken();
     return token != null;
+  }
+
+  Future<void> removeToken()async{
+    await _storage.delete(key: BaseString.keyToken);
   }
 }
