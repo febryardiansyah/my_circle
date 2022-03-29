@@ -18,6 +18,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final nameCtrl = TextEditingController();
   final emailCtrl = TextEditingController();
   final passCtrl = TextEditingController();
+  bool isPassInvisible = true;
 
   @override
   Widget build(BuildContext context) {
@@ -125,10 +126,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       TextFormField(
                         controller: passCtrl,
+                        obscureText: isPassInvisible,
                         decoration: InputDecoration(
                           hintText: 'Enter your password',
                           filled: true,
                           fillColor: BaseColor.grey1,
+                          suffixIcon: IconButton(
+                            icon: Icon(isPassInvisible?FontAwesomeIcons.eyeSlash:FontAwesomeIcons.eye),
+                            onPressed: (){
+                              setState(() {
+                                isPassInvisible = !isPassInvisible;
+                              });
+                            },
+                          ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide:

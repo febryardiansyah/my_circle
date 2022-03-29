@@ -18,7 +18,7 @@ class AuthRepo {
       UserCredential _user = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       print(_user.user.toString());
       // store data to model
-      final _userData = UserModel(name: name, email: email,);
+      final _userData = UserModel(name: name, email: email,id: _user.user!.uid);
       // store model to firestore
       await _fireStore.collection('users').doc(_user.user?.uid).set(_userData.toMap());
       return ResponseModel(
