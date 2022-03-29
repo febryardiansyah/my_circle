@@ -9,7 +9,7 @@ abstract class GetGroupsState extends Equatable {
 class GetGroupsInitial extends GetGroupsState {}
 class GetGroupsLoading extends GetGroupsState {}
 class GetGroupsSuccess extends GetGroupsState {
-  final UserModel? data;
+  final List<GroupModel>? data;
 
   GetGroupsSuccess({this.data});
 

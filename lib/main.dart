@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_circle/bloc/auth/auth_cubit.dart';
+import 'package:my_circle/bloc/create_group/create_group_cubit.dart';
 import 'package:my_circle/bloc/get_groups/get_groups_cubit.dart';
 import 'package:my_circle/bloc/login/login_cubit.dart';
 import 'package:my_circle/bloc/register/register_cubit.dart';
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_)=>LoginCubit()),
         BlocProvider(create: (context)=>AuthCubit(context.read<LoginCubit>())),
         BlocProvider(create: (_)=>GetGroupsCubit()),
+        BlocProvider(create: (_)=>CreateGroupCubit()),
       ],
       child: MaterialApp(
         title: 'My Circle',

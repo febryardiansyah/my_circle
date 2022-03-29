@@ -7,9 +7,8 @@ class UserModel {
   double? lat;
   double? long;
   String? role;
-  List<GroupModel>? groups;
 
-  UserModel({required this.id,required this.name, required this.email, this.lat, this.long,this.role,this.groups});
+  UserModel({required this.id,required this.name, required this.email, this.lat, this.long,this.role,});
 
   factory UserModel.fromMap(Map<String, dynamic> json) {
     return UserModel(
@@ -19,7 +18,6 @@ class UserModel {
       lat: json['lat'] == null?null:json['lat'],
       long: json['long'] == null?null:json['long'],
       role: json['role'] == null?null:json['role'],
-      groups: json['groups'] == null?null:List<GroupModel>.from(json['groups'].map((x)=>GroupModel.fromMap(x))),
     );
   }
 
@@ -31,7 +29,6 @@ class UserModel {
       'lat': lat,
       'long': long,
       'role': role,
-      'groups': groups,
     };
   }
 }

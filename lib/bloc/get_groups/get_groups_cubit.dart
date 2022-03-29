@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:my_circle/model/group_model.dart';
 import 'package:my_circle/model/user_model.dart';
 import 'package:my_circle/repositories/group_repo.dart';
 
@@ -14,7 +15,7 @@ class GetGroupsCubit extends Cubit<GetGroupsState> {
     try{
       final _res = await _repo.getGroups();
       if (_res.status!) {
-        final _data = UserModel.fromMap(_res.data);
+        final _data = List<GroupModel>.from(_res.data.map((x)=>GroupModel.fromMap(x.data())));
         emit(GetGroupsSuccess(data: _data));
       } else {
         emit(GetGroupsFailure(_res.message!));
