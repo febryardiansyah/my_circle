@@ -63,6 +63,20 @@ class AuthRepo {
     }
   }
 
+  Future<ResponseModel> logout()async{
+    try{
+      await removeToken();
+      await _auth.signOut();
+      return ResponseModel(
+        status: true,message: 'Logout success',
+      );
+    }on FirebaseException catch(e){
+      return ResponseModel(
+        status: false,message: e.message,
+      );
+    }
+  }
+
   Future<void> persistToken(String uid)async{
     // save token
     await _storage.write(key: BaseString.keyToken, value: uid);

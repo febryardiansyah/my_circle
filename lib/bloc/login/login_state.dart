@@ -16,3 +16,15 @@ class LoginFailure extends LoginState {
 
   LoginFailure(this.msg);
 }
+
+class LogoutLoading extends LoginState {}
+class LogoutSuccess extends LoginState {
+  final String msg;
+
+  LogoutSuccess(this.msg);
+}
+class LogoutFailure extends LoginState {
+  final String msg;
+
+  LogoutFailure(this.msg);
+}

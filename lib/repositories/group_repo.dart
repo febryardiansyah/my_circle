@@ -14,7 +14,7 @@ class GroupRepo{
   Future<ResponseModel> getGroups()async{
     try{
       final _token = await _storage.read(key: BaseString.keyToken);
-      final _res = await _fireStore.collection('users').doc(_token).collection('groups').orderBy('createdAt',descending: true).get();
+      final _res = await _fireStore.collection('users').doc(_token).collection('groups').orderBy('createdAt',descending: false).get();
       return ResponseModel(
         status: true,message: 'Success',
         data: _res.docs,
@@ -50,5 +50,49 @@ class GroupRepo{
         status: false,message: e.message,
       );
     }
+  }
+
+  Future<ResponseModel> joinGroup({required String groupCode,})async{
+    try{
+      final token = await _storage.read(key: BaseString.keyToken);
+      final user = await _fireStore.collection('users').doc(token).get();
+      UserModel userData = UserModel.fromMap(user.data()!);
+      bool isGroupExist = await _isGroupCodeExist(groupCode);
+      bool isMemberExist = await _isMemberExist(token!, groupCode);
+      if (!isGroupExist) {
+        return ResponseModel(
+          status: false,
+          message: 'Group code is not valid',
+        );
+      }
+      if (isMemberExist) {
+        return ResponseModel(
+          status: false,message: 'Already in Group'
+        );
+      }
+      final group = await _fireStore.collection('groups').doc(groupCode).get();
+      final groupData = GroupModel.fromMap(group.data()!);
+      await _fireStore.collection('groups').doc(groupCode).collection('members').doc(token).set(userData.toMap());
+      await _fireStore.collection('users').doc(token).collection('groups').doc(groupCode).set(groupData.toMap());
+      return ResponseModel(
+        status: true,message: 'Join group success',
+      );
+    }on FirebaseException catch(e){
+      return ResponseModel(
+        status: false,message: e.message,
+      );
+    }
+  }
+
+  Future<bool> _isGroupCodeExist(String groupCode)async{
+    final group = await _fireStore.collection('groups').where('groupId',isEqualTo: groupCode).get();
+    return group.docs.isNotEmpty;
+  }
+
+  Future<bool> _isMemberExist(String uid,String groupCode)async{
+    final user = await _fireStore.collection('users').doc(uid)
+        .collection('groups')
+        .where('groupId',isEqualTo: groupCode).get();
+    return user.docs.isNotEmpty;
   }
 }

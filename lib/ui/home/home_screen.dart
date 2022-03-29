@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_circle/bloc/create_group/create_group_cubit.dart';
 import 'package:my_circle/bloc/get_groups/get_groups_cubit.dart';
-import 'package:my_circle/repositories/auth_repo.dart';
+import 'package:my_circle/bloc/join_group/join_group_cubit.dart';
+import 'package:my_circle/bloc/login/login_cubit.dart';
+import 'package:my_circle/utils/base_color.dart';
+import 'package:my_circle/utils/routes.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -31,7 +34,8 @@ class _HomeScreenState extends State<HomeScreen> {
               IconButton(
                 onPressed: (){
                   Navigator.pop(context);
-                  context.read<CreateGroupCubit>().createGroup(groupName: groupNameCtrl.text);
+                  context.read<JoinGroupCubit>().joinGroup(groupCode: groupNameCtrl.text);
+                  // context.read<CreateGroupCubit>().createGroup(groupName: groupNameCtrl.text);
                 },
                 icon: Icon(Icons.done_all),),
             ],
@@ -46,28 +50,65 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: ()async{
-              final _repo = AuthRepo();
-              await _repo.removeToken();
+              context.read<LoginCubit>().logout();
             },
           ),
         ],
       ),
-      body: BlocListener<CreateGroupCubit, CreateGroupState>(
-        listener: (context, state) {
-          if (state is CreateGroupLoading) {
-            ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()..showSnackBar(SnackBar(content: Text('Loading...')));
-          }
-          if (state is CreateGroupFailure) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()..showSnackBar(SnackBar(content: Text(state.msg)));
-          }
-          if (state is CreateGroupSuccess) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()..showSnackBar(SnackBar(content: Text(state.msg)));
-            context.read<GetGroupsCubit>().fetchGroups();
-          }
-        },
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<CreateGroupCubit, CreateGroupState>(
+            listener: (context, state) {
+              if (state is CreateGroupLoading) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()..showSnackBar(SnackBar(content: Text('Loading...')));
+              }
+              if (state is CreateGroupFailure) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()..showSnackBar(SnackBar(content: Text(state.msg)));
+              }
+              if (state is CreateGroupSuccess) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()..showSnackBar(SnackBar(content: Text(state.msg)));
+                context.read<GetGroupsCubit>().fetchGroups();
+              }
+            },
+          ),
+          BlocListener<JoinGroupCubit, JoinGroupState>(
+            listener: (context, state) {
+              if (state is JoinGroupLoading) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()..showSnackBar(SnackBar(content: Text('Loading...')));
+              }
+              if (state is JoinGroupFailure) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()..showSnackBar(SnackBar(content: Text(state.msg)));
+              }
+              if (state is JoinGroupSuccess) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()..showSnackBar(SnackBar(content: Text(state.msg)));
+                context.read<GetGroupsCubit>().fetchGroups();
+              }
+            },
+          ),
+          BlocListener<LoginCubit, LoginState>(
+            listener: (context, state) {
+              if (state is LogoutLoading) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()..showSnackBar(SnackBar(content: Text('Loading...')));
+              }
+              if (state is LogoutFailure) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()..showSnackBar(SnackBar(content: Text(state.msg)));
+              }
+              if (state is LogoutSuccess) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()..showSnackBar(SnackBar(content: Text(state.msg)));
+                Navigator.pushNamedAndRemoveUntil(context, rLogin, (route) => false);
+              }
+            },
+          ),
+        ],
         child: BlocBuilder<GetGroupsCubit, GetGroupsState>(
           builder: (context, state) {
             if (state is GetGroupsLoading) {
@@ -85,7 +126,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 itemBuilder: (context,i){
                   final _item = _data[i];
                   return ListTile(
-                    title: Text(_item.groupName!),
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage(_item.groupProfile!,),
+                      backgroundColor: BaseColor.white,
+                    ),
+                    title: Text(_item.groupName!,style: TextStyle(fontWeight: FontWeight.bold)),
                   );
                 },
               );
@@ -93,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
             return Container();
           },
         ),
-      ),
+),
     );
   }
 }

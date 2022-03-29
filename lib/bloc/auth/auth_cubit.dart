@@ -21,6 +21,9 @@ class AuthCubit extends Cubit<AuthState> {
         // trigger loggedIn method
         loggedIn(token: state.token);
       }
+      if (state is LogoutSuccess) {
+        emit(AuthUnAuthenticated());
+      }
     });
   }
 
