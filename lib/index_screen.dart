@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_circle/bloc/auth/auth_cubit.dart';
 import 'package:my_circle/ui/auth/login_screen.dart';
 import 'package:my_circle/ui/home/home_screen.dart';
+import 'package:my_circle/ui/my_bottom_navbar.dart';
 
 class IndexScreen extends StatefulWidget {
   @override
@@ -27,7 +28,7 @@ class _IndexScreenState extends State<IndexScreen> {
             return LoginScreen();
           }
           if (state is AuthAuthenticated) {
-            return HomeScreen();
+            return MyBottomNavbar();
           }
           return Container();
         },

@@ -41,6 +41,7 @@ class AuthRepo {
 
   Future<ResponseModel> login({required String email, required String password})async{
     try{
+      // sign in with email password
       UserCredential _user = await _auth.signInWithEmailAndPassword(email: email, password: password);
       print('UID ?? ${_user.user!.uid}');
       return ResponseModel(
@@ -63,20 +64,24 @@ class AuthRepo {
   }
 
   Future<void> persistToken(String uid)async{
+    // save token
     await _storage.write(key: BaseString.keyToken, value: uid);
   }
 
   Future<String?> getToken() async {
+    // get token
     String? token =  await _storage.read(key: BaseString.keyToken);
     return token;
   }
 
   Future<bool> hasToken()async{
     String? token = await getToken();
+    // check if token not null
     return token != null;
   }
 
   Future<void> removeToken()async{
+    // delete token
     await _storage.delete(key: BaseString.keyToken);
   }
 }

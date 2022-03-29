@@ -3,6 +3,7 @@ import 'package:my_circle/index_screen.dart';
 import 'package:my_circle/ui/auth/login_screen.dart';
 import 'package:my_circle/ui/auth/register_screen.dart';
 import 'package:my_circle/ui/home/home_screen.dart';
+import 'package:my_circle/ui/my_bottom_navbar.dart';
 
 MaterialPageRoute _pageRoute({
   required RouteSettings settings,
@@ -27,12 +28,13 @@ Route? generateRoute(RouteSettings settings) {
       _route = _pageRoute(settings: settings, body: IndexScreen());
       break;
     case rHome:
-      _route = _pageRoute(settings: settings, body: HomeScreen());
+      _route = _pageRoute(settings: settings, body: MyBottomNavbar());
       break;
   }
   return _route;
 }
 
+// global route variable
 const String rIndex = '/';
 const String rRegister = '/register';
 const String rLogin = '/login';

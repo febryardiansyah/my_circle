@@ -13,14 +13,18 @@ class AuthCubit extends Cubit<AuthState> {
   StreamSubscription? _loginSubscription;
 
   AuthCubit(this.loginCubit) : super(AuthInitial()){
+    // listen login cubit changes
     _loginSubscription = loginCubit.stream.listen((LoginState state) {
+      // check if login cubit state is success
       if (state is LoginSuccess) {
         print('LOGGED IN TOKEN ==> ${state.token}');
+        // trigger loggedIn method
         loggedIn(token: state.token);
       }
     });
   }
 
+  // call when app started
   Future<void> appStarted()async{
     try{
       bool hasToken = await _repo.hasToken();
@@ -36,6 +40,7 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  // call when login cubit state is success
   Future<void> loggedIn({required String token})async{
     try{
       await _repo.persistToken(token);

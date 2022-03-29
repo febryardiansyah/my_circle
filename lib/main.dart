@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_circle/bloc/auth/auth_cubit.dart';
 import 'package:my_circle/bloc/login/login_cubit.dart';
 import 'package:my_circle/bloc/register/register_cubit.dart';
+import 'package:my_circle/utils/base_color.dart';
 import 'package:my_circle/utils/routes.dart';
 
 void main() async {
@@ -24,6 +25,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'My Circle',
         debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: BaseColor.mainColor),
+        ),
         initialRoute: rIndex,
         onGenerateRoute: generateRoute,
       ),
